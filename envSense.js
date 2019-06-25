@@ -101,8 +101,13 @@ function start() {
         console.log('DHT Digital Sensor (start watch)')
         dhtSensor.on('change', function (res) {
           console.log('DHT onChange value=' + res)
-          publish(`device/${deviceID}/asset/Temperature/state`, `{"value": ${res[0]}}`, mqttOptions); 
-          publish(`device/${deviceID}/asset/Humidity/state`, `{"value": ${res[1]}}`, mqttOptions); 
+          if(res[0] < 50 && res[0] > 0){
+            publish(`device/${deviceID}/asset/Temperature/state`, `{"value": ${res[0]}}`, mqttOptions);
+          }
+          if(res[1] < 100 && res[1] > 0){
+            publish(`device/${deviceID}/asset/Humidity/state`, `{"value": ${res[1]}}`, mqttOptions); 
+          }
+          
         })
         dhtSensor.watch(5000) // milliseconds
         
